@@ -1,0 +1,15 @@
+/Users/rachelsanchez/Documents/GitHub/ENGR115/ENGR115App/bin/Debug/net9.0/ENGR115App
+/Users/rachelsanchez/Documents/GitHub/ENGR115/ENGR115App/bin/Debug/net9.0/ENGR115App.deps.json
+/Users/rachelsanchez/Documents/GitHub/ENGR115/ENGR115App/bin/Debug/net9.0/ENGR115App.runtimeconfig.json
+/Users/rachelsanchez/Documents/GitHub/ENGR115/ENGR115App/bin/Debug/net9.0/ENGR115App.dll
+/Users/rachelsanchez/Documents/GitHub/ENGR115/ENGR115App/bin/Debug/net9.0/ENGR115App.pdb
+/Users/rachelsanchez/Documents/GitHub/ENGR115/ENGR115App/obj/Debug/net9.0/ENGR115App.GeneratedMSBuildEditorConfig.editorconfig
+/Users/rachelsanchez/Documents/GitHub/ENGR115/ENGR115App/obj/Debug/net9.0/ENGR115App.AssemblyInfoInputs.cache
+/Users/rachelsanchez/Documents/GitHub/ENGR115/ENGR115App/obj/Debug/net9.0/ENGR115App.AssemblyInfo.cs
+/Users/rachelsanchez/Documents/GitHub/ENGR115/ENGR115App/obj/Debug/net9.0/ENGR115App.csproj.CoreCompileInputs.cache
+/Users/rachelsanchez/Documents/GitHub/ENGR115/ENGR115App/obj/Debug/net9.0/ENGR115App.sourcelink.json
+/Users/rachelsanchez/Documents/GitHub/ENGR115/ENGR115App/obj/Debug/net9.0/ENGR115App.dll
+/Users/rachelsanchez/Documents/GitHub/ENGR115/ENGR115App/obj/Debug/net9.0/refint/ENGR115App.dll
+/Users/rachelsanchez/Documents/GitHub/ENGR115/ENGR115App/obj/Debug/net9.0/ENGR115App.pdb
+/Users/rachelsanchez/Documents/GitHub/ENGR115/ENGR115App/obj/Debug/net9.0/ENGR115App.genruntimeconfig.cache
+/Users/rachelsanchez/Documents/GitHub/ENGR115/ENGR115App/obj/Debug/net9.0/ref/ENGR115App.dll
