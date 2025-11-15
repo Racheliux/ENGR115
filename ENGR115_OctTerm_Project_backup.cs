@@ -1,5 +1,3 @@
-
-//new code week 3
 //Name: Rachel Sanchez
 //Course: ENGR 115
 //Assignment: Aerobatic Maneuver Calculations
@@ -27,67 +25,68 @@ class Program
                 Console.WriteLine("Invalid number of maneuvers. Please run again and enter a positive integer.");
                 Console.WriteLine("\nPress Enter to try again...");
                 Console.ReadLine();
-                continue;  // This will restart the loop instead of ending the program
+                continue;
             }
-            Console.WriteLine($"You have chosen to calculate {numberOfManeuvers} aerobatic maneuvers.");    
+            Console.WriteLine($"You have chosen to calculate {numberOfManeuvers} aerobatic maneuvers.");
 
-            // Read and validate inputs
-            Console.Write("Enter the speed at which you will enter the loop (in mi/hr): ");
-            string? input = Console.ReadLine();
-            if (!double.TryParse(input, out double loopEntrySpeedMiPerHr))
+            //
+            for (int i = 1; i <= numberOfManeuvers; i++)
             {
-                Console.WriteLine("Invalid speed input. Please run again and enter a numeric value.");
-                Console.WriteLine("\nPress Enter to try again...");
-                Console.ReadLine();
-                continue;  // This will restart the loop instead of ending the program
+                Console.WriteLine($"\n--- Maneuver {i} ---");
+
+                // Read and validate inputs
+                Console.Write("Enter the speed at which you will enter the loop (in mi/hr): ");
+                string? input = Console.ReadLine();
+                if (!double.TryParse(input, out double loopEntrySpeedMiPerHr))
+                {
+                    Console.WriteLine("Invalid speed input. Please enter a numeric value.");
+                    i--; // redo this maneuver
+                    continue;
+                }
+                Console.WriteLine($"This is what you entered: {loopEntrySpeedMiPerHr} mi/hr");
+
+                Console.Write("Enter the radius of the loop (in ft): ");
+                input = Console.ReadLine();
+                if (!double.TryParse(input, out double loopRadiusFt))
+                {
+                    Console.WriteLine("Invalid radius input. Please enter a numeric value.");
+                    i--; // redo this maneuver
+                    continue;
+                }
+                Console.WriteLine($"This is what you entered: {loopRadiusFt} ft");
+
+                // Calculations
+                double loopCircumference = 2.0 * Math.PI * loopRadiusFt;
+                const double gravity = 32.2; // ft/s^2
+
+                double loopEntrySpeedFtPerSec = loopEntrySpeedMiPerHr * 1.467;
+                double entrySpeedSquared = loopEntrySpeedFtPerSec * loopEntrySpeedFtPerSec;
+
+                double underSqrt = entrySpeedSquared - 4.0 * gravity * loopRadiusFt;
+                if (underSqrt < 0)
+                {
+                    Console.WriteLine("Error: Impossible loop. Try a larger entry speed or smaller radius.");
+                    i--; // redo this maneuver
+                    continue;
+                }
+
+                double velocityAtTopOfLoopFtPerSec = Math.Sqrt(underSqrt);
+                double velocityAtTopOfLoopMiPerHr = velocityAtTopOfLoopFtPerSec / 1.467;
+                double loadFactor = entrySpeedSquared / (gravity * loopRadiusFt) + 1.0;
+
+                // Output
+                Console.WriteLine("\nResults:");
+                Console.WriteLine(new string('-', 125));
+                Console.WriteLine(" Starting velocity (mi/hr)    Loop radius (ft)    Loop Circumference (ft)    Load factor (g)    Velocity at top (mi/hr)");
+                Console.WriteLine($"{loopEntrySpeedMiPerHr,24:F2}{loopRadiusFt,20:F2}{loopCircumference,26:F2}{loadFactor,20:F2}{velocityAtTopOfLoopMiPerHr,21:F2}");
+                Console.WriteLine(new string('-', 125));
             }
-            Console.WriteLine($"This is what you entered: {loopEntrySpeedMiPerHr} mi/hr");
 
-            Console.Write("Enter the radius of the loop (in ft): ");
-            input = Console.ReadLine();
-            if (!double.TryParse(input, out double loopRadiusFt))
-            {
-                Console.WriteLine("Invalid radius input. Please run again and enter a numeric value.");
-                Console.WriteLine("\nPress Enter to try again...");
-                Console.ReadLine();
-                continue;  // This will restart the loop instead of ending the program
-            }
-            Console.WriteLine($"This is what you entered: {loopRadiusFt} ft");
-
-            // Calculations
-            double loopCircumference = 2.0 * Math.PI * loopRadiusFt;
-            const double gravity = 32.2; // ft/s^2
-            // Convert speed from mi/hr to ft/s (approx)
-            double loopEntrySpeedFtPerSec = loopEntrySpeedMiPerHr * 1.467;
-            double entrySpeedSquared = loopEntrySpeedFtPerSec * loopEntrySpeedFtPerSec;
-
-            // Check the radicand for physical possibility
-            double underSqrt = entrySpeedSquared - 4.0 * gravity * loopRadiusFt;
-            if (underSqrt < 0)
-            {
-                Console.WriteLine("Error: parameters produce an impossible loop (negative value under square root).");
-                Console.WriteLine("Try a larger entry speed or a smaller radius.");
-                Console.WriteLine("\nPress Enter to try again...");
-                Console.ReadLine();
-                continue;  // This will restart the loop instead of ending the program
-            }
-
-            double velocityAtTopOfLoopFtPerSec = Math.Sqrt(underSqrt);
-            double velocityAtTopOfLoopMiPerHr = velocityAtTopOfLoopFtPerSec / 1.467;
-            double loadFactor = entrySpeedSquared / (gravity * loopRadiusFt) + 1.0;
-
-            // Output results in a formatted table row
-            Console.WriteLine("\nResults:");
-            Console.WriteLine(new string('-', 125));
-            Console.WriteLine(" Starting velocity (mi/hr)    Loop radius (ft)    Loop Circumference (ft)    Load factor (g)    Velocity at top (mi/hr)");
-            Console.WriteLine($"{loopEntrySpeedMiPerHr,24:F2}{loopRadiusFt,20:F2}{loopCircumference,26:F2}{loadFactor,20:F2}{velocityAtTopOfLoopMiPerHr,21:F2}");
-            Console.WriteLine(new string('-', 125));
-            
             // Ask if user wants to run again
             Console.Write("\nWould you like to calculate another loop? (yes/no): ");
             string? response = Console.ReadLine()?.ToLower();
             runAgain = response == "yes" || response == "y";
-            
+
             if (!runAgain)
             {
                 Console.WriteLine("\nThank you for using the math program!");
