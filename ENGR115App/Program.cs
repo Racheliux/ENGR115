@@ -1,75 +1,13 @@
 //Name: Rachel Sanchez
 //Course: ENGR 115
 //Assignment: Aerobatic Maneuver Calculations (Checkpoint 4)
-//Description: This program calculates the load factor and velocity at the top of a loop
-//             for multiple aerobatic maneuvers. This version uses arrays and methods for
-//             cleaner input validation and repeated calculations.
-//Key features for this module: Arrays, methods, input validation.
+//Description: Simple version of the program that calculates load factor 
+//             and top velocity for aerobatic loops.
 
 using System;
 
 class Program
 {
-    // ------------------- INPUT VALIDATION METHODS -------------------
-
-    // Method to get a valid integer
-    static int GetIntInput(string message)
-    {
-        int value;
-        Console.Write(message);
-        while (!int.TryParse(Console.ReadLine(), out value) || value <= 0)
-        {
-            Console.WriteLine("Invalid input. Please enter a positive whole number.");
-            Console.Write(message);
-        }
-        return value;
-    }
-
-    // Method to get a valid double
-    static double GetDoubleInput(string message)
-    {
-        double value;
-        Console.Write(message);
-        while (!double.TryParse(Console.ReadLine(), out value) || value <= 0)
-        {
-            Console.WriteLine("Invalid input. Please enter a positive numeric value.");
-            Console.Write(message);
-        }
-        return value;
-    }
-
-    // ------------------- CALCULATION METHOD -------------------
-
-    static double CalculateTopVelocity(double entrySpeedFtPerSec, double radius, double gravity)
-    {
-        double underSqrt = (entrySpeedFtPerSec * entrySpeedFtPerSec) - (4.0 * gravity * radius);
-        return Math.Sqrt(underSqrt);
-    }
-
-    // ------------------- PRINT METHOD -------------------
-
-    static void PrintResults(
-        double[] speeds,
-        double[] radii,
-        double[] circumferences,
-        double[] loadFactors,
-        double[] topSpeeds)
-    {
-        Console.WriteLine("\nResults:");
-        Console.WriteLine(new string('-', 125));
-        Console.WriteLine("  Entry Speed (mi/hr)   Radius (ft)   Loop Circumference (ft)   Load Factor (g)   Top Velocity (mi/hr)");
-        Console.WriteLine(new string('-', 125));
-
-        for (int i = 0; i < speeds.Length; i++)
-        {
-            Console.WriteLine($"{speeds[i],18:F2}{radii[i],14:F2}{circumferences[i],28:F2}{loadFactors[i],18:F2}{topSpeeds[i],20:F2}");
-        }
-
-        Console.WriteLine(new string('-', 125));
-    }
-
-    // ------------------- MAIN PROGRAM -------------------
-
     static void Main()
     {
         bool runAgain = true;
@@ -79,61 +17,51 @@ class Program
             Console.Clear();
             Console.WriteLine("Hello! Let's do some math!");
 
-            const double gravity = 32.2;
+            double gravity = 32.2;
 
-            // Ask how many maneuvers to calculate
-            int numberOfManeuvers = GetIntInput("Enter the number of aerobatic maneuvers to calculate: ");
-            Console.WriteLine($"You chose {numberOfManeuvers} maneuvers.\n");
+            Console.Write("How many maneuvers would you like to calculate? ");
+            int total = int.Parse(Console.ReadLine());
 
-            // Arrays to store values
-            double[] entrySpeeds = new double[numberOfManeuvers];
-            double[] radii = new double[numberOfManeuvers];
-            double[] circumferences = new double[numberOfManeuvers];
-            double[] loadFactors = new double[numberOfManeuvers];
-            double[] topVelocities = new double[numberOfManeuvers];
+            Console.WriteLine("\nResults:");
+            Console.WriteLine("---------------------------------------------------------------");
+            Console.WriteLine("Entry Speed | Radius | Circumference | Load Factor | Top Speed");
+            Console.WriteLine("---------------------------------------------------------------");
 
-            // Loop through maneuvers and calculate each one
-            for (int i = 0; i < numberOfManeuvers; i++)
+            for (int i = 1; i <= total; i++)
             {
-                Console.WriteLine($"\n--- Maneuver {i + 1} ---");
+                Console.WriteLine($"\n--- Maneuver {i} ---");
 
-                // Get user input with validation method
-                double entrySpeedMiPerHr = GetDoubleInput("Enter the entry speed (mi/hr): ");
-                double radiusFt = GetDoubleInput("Enter the loop radius (ft): ");
+                Console.Write("Enter entry speed (mi/hr): ");
+                double entrySpeedMiHr = double.Parse(Console.ReadLine());
 
-                // Store input
-                entrySpeeds[i] = entrySpeedMiPerHr;
-                radii[i] = radiusFt;
+                Console.Write("Enter loop radius (ft): ");
+                double radius = double.Parse(Console.ReadLine());
 
-                // Convert speed
-                double entrySpeedFtPerSec = entrySpeedMiPerHr * 1.467;
+                // Convert speed to ft/sec
+                double entrySpeedFtSec = entrySpeedMiHr * 1.467;
 
-                // Loop circumference
-                circumferences[i] = 2.0 * Math.PI * radiusFt;
+                // Circumference
+                double circumference = 2 * Math.PI * radius;
 
                 // Load factor
-                double entrySpeedSquared = entrySpeedFtPerSec * entrySpeedFtPerSec;
-                loadFactors[i] = entrySpeedSquared / (gravity * radiusFt) + 1.0;
+                double loadFactor = (entrySpeedFtSec * entrySpeedFtSec) / (gravity * radius) + 1;
 
-                // Calculate top velocity
-                double topVelocityFtPerSec = CalculateTopVelocity(entrySpeedFtPerSec, radiusFt, gravity);
-                topVelocities[i] = topVelocityFtPerSec / 1.467;
+                // Top velocity
+                double underSqrt = (entrySpeedFtSec * entrySpeedFtSec) - (4 * gravity * radius);
+                double topVelFtSec = Math.Sqrt(underSqrt);
+                double topVelMiHr = topVelFtSec / 1.467;
+
+                Console.WriteLine($"Speed: {entrySpeedMiHr:F2} | Radius: {radius:F2} | Circ: {circumference:F2} | Load: {loadFactor:F2} | Top: {topVelMiHr:F2}");
             }
 
-            // Print results using method
-            PrintResults(entrySpeeds, radii, circumferences, loadFactors, topVelocities);
+            Console.Write("\nWould you like to run the program again? (yes/no): ");
+            string answer = Console.ReadLine().ToLower();
 
-            // Run again?
-            Console.Write("\nWould you like to calculate another set of maneuvers? (yes/no): ");
-            string? response = Console.ReadLine()?.ToLower();
-
-            runAgain = (response == "yes" || response == "y");
-
-            if (!runAgain)
+            if (answer != "yes" && answer != "y")
             {
+                runAgain = false;
                 Console.WriteLine("\nThank you for using the math program!");
             }
         }
     }
 }
-
