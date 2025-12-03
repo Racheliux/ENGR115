@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ENGR115App")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+658be43fff967512519308fd1b914429b5f57719")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+92d3f5342d1dccdfeacc8a0e33640a9f6a5f4206")]
 [assembly: System.Reflection.AssemblyProductAttribute("ENGR115App")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ENGR115App")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
