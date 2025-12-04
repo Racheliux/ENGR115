@@ -1,31 +1,27 @@
 //Name: Rachel Sanchez
 //Course: ENGR 115
-//Assignment: Aerobatic Maneuver Calculations – Checkpoint 5 (Module 4 & 5)
+//Assignment: Aerobatic Maneuver Calculations – Checkpoint 6 (Module 6)
 //Description: This program calculates the load factor and velocity at the top of a
 // loop for an aerobatic maneuver. It uses object-oriented design with arrays (size 10),
 // a non-static ManeuverDesign class containing data and calculation methods, and a
-// static DataManager class to get the number of designs and display results.
+// static DataManager class to get the number of designs, display results, and write results to a CSV file.
 //Key features: User input (mi/hr and ft), internal conversion to ft/s for calculations,
-// mathematical calculations, formatted table output, classes, methods, arrays.
+// mathematical calculations, formatted table output, classes, methods, arrays, and file writing.
 
 using System;
+using System.IO;
 
 public class ManeuverDesign
 {
-    // Arrays of size 10 per module requirement (float)
-    public float[] entrySpeed = new float[10];            // stored in ft/s (internal)
-    public float[] loopRadius = new float[10];            // ft
-    public float[] topSpeed = new float[10];              // ft/s
-    public float[] loadFactor = new float[10];            // g
-    public float[] loopCircumference = new float[10];     // ft
-    public bool[] loadFactorExceeded = new bool[10];      // bool
+    public float[] entrySpeed = new float[10];
+    public float[] loopRadius = new float[10];
+    public float[] topSpeed = new float[10];
+    public float[] loadFactor = new float[10];
+    public float[] loopCircumference = new float[10];
+    public bool[] loadFactorExceeded = new bool[10];
 
-    // Gravity constant (ft/s^2)
     private const float gravity = 32.2f;
 
-    // Methods required by the assignment
-
-    // Request and return the entry speed (mi/hr converted to ft/s)
     public float SetEntrySpeed()
     {
         while (true)
@@ -40,14 +36,12 @@ public class ManeuverDesign
                 continue;
             }
 
-            // convert to ft/s internally (1 mi/hr = 1.467 ft/s)
             float speedFtSec = speedMiHr * 1.467f;
             Console.WriteLine($"This is what you entered: {speedMiHr} mi/hr");
             return speedFtSec;
         }
     }
 
-    // Request and return the loop radius (ft)
     public float SetLoopRadius()
     {
         while (true)
@@ -67,41 +61,34 @@ public class ManeuverDesign
         }
     }
 
-    // Calculate top speed (ft/s) using v_top = sqrt(v_entry^2 - 4*g*r)
     public float CalcTopSpeed(float entrySpeedFtSec, float loopRadiusFt)
     {
         double underSqrt = (double)entrySpeedFtSec * entrySpeedFtSec - 4.0 * gravity * loopRadiusFt;
         if (underSqrt < 0)
         {
-            return -1f; // signal impossible loop
+            return -1f;
         }
         return (float)Math.Sqrt(underSqrt);
     }
 
-    // Calculate loop circumference (ft)
     public float CalcLoopCircumference(float loopRadiusFt)
     {
         return (float)(2.0 * Math.PI * loopRadiusFt);
     }
 
-    // Calculate load factor at bottom: n = v^2/(g*r) + 1  (v in ft/s)
     public float CalcLoadFactor(float entrySpeedFtSec, float loopRadiusFt)
     {
         return (entrySpeedFtSec * entrySpeedFtSec) / (gravity * loopRadiusFt) + 1.0f;
     }
 
-    // Check if g-load exceeds a limit (example: > 6g is considered exceeded here)
-    // Return true if exceeded, false otherwise.
     public bool CheckOverGLimit(float loadFactorValue)
     {
-        // Use 6g as the example threshold (instructors sometimes use this)
         return loadFactorValue > 6.0f;
     }
 }
 
 public static class DataManager
 {
-    // Ask the user how many loop designs to evaluate and return int
     public static int SetNumberOfLoopDesigns()
     {
         while (true)
@@ -119,21 +106,16 @@ public static class DataManager
         }
     }
 
-    // DisplayOutput: displays the results table as shown in the sample (Fig 5)
-    // It will print all results up to 'count' entries from the ManeuverDesign instance.
     public static void DisplayOutput(ManeuverDesign design, int count)
     {
-        // Header row
         Console.WriteLine();
         Console.WriteLine("Maneuver Design   Starting Velocity(mph)   Loop Radius(ft)   Velocity Top (mph)   Loop Circumference(ft)   Load Factor(g)   n exceeded");
-        
+
         for (int i = 0; i < count; i++)
         {
-            // Convert stored ft/s speeds back to mi/hr for display: mph = ft/s / 1.467
             float startSpeedMph = design.entrySpeed[i] / 1.467f;
             float topSpeedMph = design.topSpeed[i] / 1.467f;
 
-            // Format numbers similar to the sample output: integer-like for simplicity
             string line = string.Format(
                 "{0,-18} {1,-24:F0} {2,-16:F0} {3,-19:F0} {4,-24:F0} {5,-14:F0} {6}",
                 i + 1,
@@ -148,46 +130,62 @@ public static class DataManager
             Console.WriteLine(line);
         }
     }
+
+    // CSV Writing Method
+    public static void WriteDataToFile(ManeuverDesign design, int count)
+    {
+        string filePath = "results.csv";
+
+        using (StreamWriter writer = new StreamWriter(filePath))
+        {
+            writer.WriteLine("Design,StartingVelocity_mph,LoopRadius_ft,TopVelocity_mph,LoopCircumference_ft,LoadFactor_g,nExceeded");
+
+            for (int i = 0; i < count; i++)
+            {
+                float startSpeedMph = design.entrySpeed[i] / 1.467f;
+                float topSpeedMph = design.topSpeed[i] / 1.467f;
+
+                writer.WriteLine(
+                    $"{i + 1}," +
+                    $"{startSpeedMph:F0}," +
+                    $"{design.loopRadius[i]:F0}," +
+                    $"{topSpeedMph:F0}," +
+                    $"{design.loopCircumference[i]:F0}," +
+                    $"{design.loadFactor[i]:F0}," +
+                    $"{design.loadFactorExceeded[i]}"
+                );
+            }
+        }
+
+        Console.WriteLine("\nCSV file saved as: " + filePath);
+    }
 }
 
 class Program
 {
     static void Main()
     {
-        // Header comments are at the top of the file for submission requirements.
         ManeuverDesign design = new ManeuverDesign();
-
         bool runAgain = true;
 
         do
         {
             Console.Clear();
-
             Console.WriteLine("Hello! Let's do some math!");
 
-            // Step 1: Ask number of designs
             int numLoops = DataManager.SetNumberOfLoopDesigns();
-
-            // Clear screen as specified by the module flow
             Console.Clear();
 
-            int storedCount = 0; // how many valid results we've saved
+            int storedCount = 0;
 
-            // Step 2 & 3: For each design, get inputs and display cumulative results
             for (int i = 0; i < numLoops; i++)
             {
                 Console.WriteLine($"\n--- Loop {i + 1} of {numLoops} ---");
 
-                // Get entry speed (returns ft/s)
                 float entryFtSec = design.SetEntrySpeed();
-
-                // Get loop radius (ft)
                 float radiusFt = design.SetLoopRadius();
-
-                // Clear screen before showing table (module asks to clear and then show results)
                 Console.Clear();
 
-                // Calculate values (ft/s internally)
                 float topFtSec = design.CalcTopSpeed(entryFtSec, radiusFt);
                 if (topFtSec < 0)
                 {
@@ -195,7 +193,7 @@ class Program
                     Console.WriteLine("Try a larger entry speed or a smaller radius.");
                     Console.WriteLine("\nPress Enter to re-enter this loop...");
                     Console.ReadLine();
-                    i--; // repeat this iteration
+                    i--;
                     continue;
                 }
 
@@ -203,7 +201,6 @@ class Program
                 float nFactor = design.CalcLoadFactor(entryFtSec, radiusFt);
                 bool exceeded = design.CheckOverGLimit(nFactor);
 
-                // Store into arrays (up to 10)
                 if (storedCount < 10)
                 {
                     design.entrySpeed[storedCount] = entryFtSec;
@@ -215,16 +212,16 @@ class Program
                     storedCount++;
                 }
 
-                // Display cumulative table after this input (shows all previous entries)
                 DataManager.DisplayOutput(design, storedCount);
 
-                // Pause briefly so the user can see the table before next input
                 Console.WriteLine("\nPress Enter to continue to the next loop or to finish...");
                 Console.ReadLine();
                 Console.Clear();
             }
 
-            // After finishing the requested loops, ask if user wants to run full program again
+            // CALL CSV METHOD HERE ✔
+            DataManager.WriteDataToFile(design, storedCount);
+
             Console.Write("\nWould you like to run the program again? (yes/no): ");
             string? response = Console.ReadLine()?.ToLower();
             runAgain = response == "yes" || response == "y";
